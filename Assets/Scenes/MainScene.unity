@@ -908,7 +908,7 @@ MonoBehaviour:
   moveSpeed: 6
   playerAnimator: {fileID: 1134783231}
   speedParameterName: Speed
-  bulletSpeed: 16
+  bulletSpeed: 30
   fireRate: 0.12
   bulletSpawnPoint: {fileID: 2123891321}
   gunfireSound: {fileID: 8300000, guid: 4f2b6d4129e13407db26834b930af780, type: 3}
@@ -1313,6 +1313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1832647882}
   - component: {fileID: 1832647883}
+  - component: {fileID: 1832647884}
   m_Layer: 0
   m_Name: MuzzleFlash
   m_TagString: Untagged
@@ -1394,6 +1395,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1832647884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832647881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6c413efdad541ce9005b58b245b211, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MuzzleFlashBillboard
+  targetCamera: {fileID: 0}
+  invertFacing: 0
 --- !u!1 &1869027272
 GameObject:
   m_ObjectHideFlags: 0
