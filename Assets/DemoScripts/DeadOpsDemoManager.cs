@@ -1,5 +1,5 @@
 using UnityEngine;
-
+//DeadOpsDemoManager Script
 public class DeadOpsDemoManager : MonoBehaviour
 {
     [Header("References")]
