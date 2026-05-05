@@ -5,6 +5,10 @@ public class TwinStickPlayer : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 6f;
 
+    [Header("Animation")]
+    public Animator playerAnimator;
+    public string speedParameterName = "Speed";
+
     [Header("Shooting")]
     public float bulletSpeed = 16f;
     public float fireRate = 0.12f;
@@ -15,6 +19,13 @@ public class TwinStickPlayer : MonoBehaviour
     void Start()
     {
         SetupPlayerVisual();
+
+        // Safety fallback: if the Animator was not assigned in the Inspector,
+        // try to find one on a child object like VisualRoot/PlayerModel.
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponentInChildren<Animator>();
+        }
     }
 
     void Update()
@@ -43,11 +54,22 @@ public class TwinStickPlayer : MonoBehaviour
 
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
 
+        UpdateMovementAnimation(moveDirection);
+
         // If not shooting, face movement direction
         if (moveDirection.sqrMagnitude > 0.01f && !IsShootingInputHeld())
         {
             transform.rotation = Quaternion.LookRotation(moveDirection);
         }
+    }
+
+    void UpdateMovementAnimation(Vector3 moveDirection)
+    {
+        if (playerAnimator == null)
+            return;
+
+        float movementAmount = moveDirection.sqrMagnitude > 0.01f ? 1f : 0f;
+        playerAnimator.SetFloat(speedParameterName, movementAmount);
     }
 
     void AimAndShoot()

@@ -905,6 +905,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   moveSpeed: 6
+  playerAnimator: {fileID: 1134783231}
+  speedParameterName: Speed
   bulletSpeed: 16
   fireRate: 0.12
 --- !u!114 &1045546609
@@ -932,6 +934,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 984636539}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -974,7 +984,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
       propertyPath: m_Name
-      value: zombieApocalypseMan
+      value: PlayerModel
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
       propertyPath: m_Controller
@@ -992,6 +1002,11 @@ PrefabInstance:
 --- !u!4 &1134783230 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
+  m_PrefabInstance: {fileID: 1052950534}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1134783231 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: b10745c027a4242e9aad84d46b0d208e, type: 3}
   m_PrefabInstance: {fileID: 1052950534}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1161848786
