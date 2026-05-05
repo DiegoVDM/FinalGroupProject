@@ -14,6 +14,7 @@ public class TwinStickPlayer : MonoBehaviour
     public float bulletSpeed = 16f;
     public float fireRate = 0.12f;
     public Transform bulletSpawnPoint;
+    public BulletProjectile bulletPrefab;
 
     [Header("Weapon Audio")]
     public AudioClip gunfireSound;
@@ -122,19 +123,41 @@ public class TwinStickPlayer : MonoBehaviour
 
     void FireBullet(Vector3 direction)
     {
-        GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        bullet.name = "Prototype Bullet";
+        BulletProjectile projectile = SpawnBulletProjectile(direction);
+
+        if (projectile != null)
+        {
+            projectile.Initialize(direction, bulletSpeed);
+        }
+
+        PlayGunfireSound();
+        TriggerMuzzleFlash();
+    }
+
+    BulletProjectile SpawnBulletProjectile(Vector3 direction)
+    {
+        Vector3 spawnPosition = transform.position + direction * 0.9f + Vector3.up * 0.2f;
+        Quaternion spawnRotation = Quaternion.LookRotation(direction);
 
         if (bulletSpawnPoint != null)
         {
-            bullet.transform.position = bulletSpawnPoint.position;
-        }
-        else
-        {
-            // Fallback in case BulletSpawnPoint is not assigned.
-            bullet.transform.position = transform.position + direction * 0.9f + Vector3.up * 0.2f;
+            spawnPosition = bulletSpawnPoint.position;
+            spawnRotation = bulletSpawnPoint.rotation;
         }
 
+        if (bulletPrefab != null)
+        {
+            return Instantiate(bulletPrefab, spawnPosition, spawnRotation);
+        }
+
+        return SpawnFallbackPrototypeBullet(spawnPosition);
+    }
+
+    BulletProjectile SpawnFallbackPrototypeBullet(Vector3 spawnPosition)
+    {
+        GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        bullet.name = "Prototype Bullet";
+        bullet.transform.position = spawnPosition;
         bullet.transform.localScale = Vector3.one * 0.3f;
 
         Renderer bulletRenderer = bullet.GetComponent<Renderer>();
@@ -148,14 +171,12 @@ public class TwinStickPlayer : MonoBehaviour
 
         Rigidbody rb = bullet.AddComponent<Rigidbody>();
         rb.useGravity = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.linearVelocity = direction * bulletSpeed;
+        rb.isKinematic = true;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
         BulletProjectile projectile = bullet.AddComponent<BulletProjectile>();
         projectile.lifeTime = 2f;
-
-        PlayGunfireSound();
-        TriggerMuzzleFlash();
+        return projectile;
     }
 
     void PlayGunfireSound()
@@ -235,26 +256,5 @@ public class TwinStickPlayer : MonoBehaviour
 
         // The old prototype cube gun was removed.
         // The real gun model now lives under AimPivot > WeaponSocket.
-    }
-}
-
-public class BulletProjectile : MonoBehaviour
-{
-    public float lifeTime = 2f;
-
-    void Start()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        DemoZombie zombie = other.GetComponent<DemoZombie>();
-
-        if (zombie != null)
-        {
-            zombie.Die();
-            Destroy(gameObject);
-        }
     }
 }

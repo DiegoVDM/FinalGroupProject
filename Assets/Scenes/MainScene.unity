@@ -911,6 +911,7 @@ MonoBehaviour:
   bulletSpeed: 30
   fireRate: 0.12
   bulletSpawnPoint: {fileID: 2123891321}
+  bulletPrefab: {fileID: 1961539667023935850, guid: 387834bf6431447d2a2c5a076c5d2905, type: 3}
   gunfireSound: {fileID: 8300000, guid: 4f2b6d4129e13407db26834b930af780, type: 3}
   weaponAudioSource: {fileID: 0}
   gunfireVolume: 0.05
