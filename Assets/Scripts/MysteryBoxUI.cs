@@ -29,6 +29,9 @@ public class MysteryBoxUI : MonoBehaviour
     public Sprite speedSprite;
     public Sprite damageSprite;
 
+    [Header("Mystery Box (World)")]
+    public MysteryBoxController mysteryBox;
+
     [Header("Animation")]
     public float punchScale    = 1.00f;  // icon size
     public float punchDuration = 0.18f;
@@ -76,6 +79,9 @@ public class MysteryBoxUI : MonoBehaviour
 
         if (spinner == null)
             spinner = Object.FindAnyObjectByType<MysteryBoxSpinner>();
+
+        if (mysteryBox == null)
+            mysteryBox = Object.FindAnyObjectByType<MysteryBoxController>();
 
         if (balanceLabel == null)
             balanceLabel = FindComponentInScene<TextMeshProUGUI>("Balance");
@@ -207,6 +213,9 @@ public class MysteryBoxUI : MonoBehaviour
             StartCoroutine(ShakeButton());
             return;
         }
+
+        if (mysteryBox != null)
+            mysteryBox.Spin();
 
         PerkType result = (PerkType)Random.Range(0, 3); // equal chance for now, we can change based on which is more op
         _spinning = true;

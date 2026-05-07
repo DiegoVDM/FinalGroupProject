@@ -1,10 +1,7 @@
 {
   "dependencies": {
-<<<<<<< HEAD
     "com.unity.2d.sprite": "1.0.0",
-=======
     "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
->>>>>>> origin/Chris---Maps
     "com.unity.ai.navigation": "2.0.9",
     "com.unity.cloud.gltfast": "6.18.0",
     "com.unity.collab-proxy": "2.11.2",
