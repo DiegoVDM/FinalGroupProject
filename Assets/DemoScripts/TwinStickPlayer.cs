@@ -54,7 +54,10 @@ public class TwinStickPlayer : MonoBehaviour
     {
         Vector3 moveDirection = GetMoveDirection();
 
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        PerkState.EnsureLoaded();
+        float perkSpeedMultiplier = PerkState.SpeedMultiplier;
+
+        transform.position += moveDirection * (moveSpeed * perkSpeedMultiplier) * Time.deltaTime;
 
         UpdateMovementAnimation(moveDirection);
 

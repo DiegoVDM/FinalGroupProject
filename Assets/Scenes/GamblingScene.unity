@@ -2921,7 +2921,7 @@ MonoBehaviour:
   healthSprite: {fileID: -808080475, guid: 10d6e7b59b9b5304b8b8d037be91fe44, type: 3}
   speedSprite: {fileID: -1474046919, guid: 66a9d0a504b6f6d4d988e8c69fcaf507, type: 3}
   damageSprite: {fileID: -875721509, guid: d13d11c7c9e89c8488dc6c457983d923, type: 3}
-  mysteryBox: {fileID: 0}
+  mysteryBox: {fileID: 622532762}
   punchScale: 1
   punchDuration: 0.18
   settleDuration: 0.12

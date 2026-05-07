@@ -81,14 +81,8 @@ public class DeadOpsDemoManager : MonoBehaviour
     {
         kills++;
 
-        int rewardAmount = 25;
-
-        if (instance != null)
-        {
-            rewardAmount = instance.moneyPerZombieKill;
-        }
-
-        AddMoney(rewardAmount);
+        if (CurrencyManager.Instance != null)
+            CurrencyManager.Instance.RegisterKill(1);
     }
 
     public static void AddMoney(int amount)

@@ -68,8 +68,8 @@ public class MysteryBoxUI : MonoBehaviour
 
         // initialize + keep active perk label live
         RefreshActivePerkDisplay();
-        if (PlayerStats.Instance != null)
-            PlayerStats.Instance.ActivePerkChanged += _ => RefreshActivePerkDisplay();
+        if (PlayerHealth.Instance != null)
+            PlayerHealth.Instance.ActivePerkChanged += _ => RefreshActivePerkDisplay();
     }
 
     void ResolveMissingReferences()
@@ -157,7 +157,8 @@ public class MysteryBoxUI : MonoBehaviour
         if (activePerkLabel == null && activePerkIcon == null)
             return;
 
-        if (PlayerStats.Instance == null || PlayerStats.Instance.ActivePerk == null)
+        PerkState.EnsureLoaded();
+        if (PerkState.ActivePerk == null)
         {
             if (activePerkLabel != null)
                 activePerkLabel.text = "Active Perk: None";
@@ -166,7 +167,7 @@ public class MysteryBoxUI : MonoBehaviour
             return;
         }
 
-        PerkType perk = PlayerStats.Instance.ActivePerk.Value;
+        PerkType perk = PerkState.ActivePerk.Value;
         if (activePerkLabel != null)
             activePerkLabel.text = $"Active Perk: {PerkToDisplayName(perk)}";
 
@@ -270,8 +271,10 @@ public class MysteryBoxUI : MonoBehaviour
             yield return StartCoroutine(PunchIcon(revealIcon.transform));
 
         // Applies the perk
-        if (PlayerStats.Instance != null)
-            PlayerStats.Instance.ApplyPerk(perk);
+        if (PlayerHealth.Instance != null)
+            PlayerHealth.Instance.ApplyPerk(perk);
+        else
+            PerkState.Apply(perk);
 
         RefreshActivePerkDisplay();
 
