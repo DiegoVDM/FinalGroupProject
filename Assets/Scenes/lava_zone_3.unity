@@ -494,6 +494,85 @@ MonoBehaviour:
   background: {fileID: 1823794872}
   handle: {fileID: 1265030153}
   deadZone: 0.1
+--- !u!1 &68094933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 68094936}
+  - component: {fileID: 68094935}
+  - component: {fileID: 68094934}
+  m_Layer: 0
+  m_Name: ObjectiveText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &68094934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68094933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Text
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 28
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: 'Zombies left: 3'
+--- !u!222 &68094935
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68094933}
+  m_CullTransparentMesh: 1
+--- !u!224 &68094936
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68094933}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2040712967}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 24, y: -24}
+  m_SizeDelta: {x: 360, y: 52}
+  m_Pivot: {x: 0, y: 1}
 --- !u!4 &90297009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6865560061453651230, guid: a493639cf193eb649bd5ac24590bb9d8, type: 3}
@@ -3121,6 +3200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827725014}
   - component: {fileID: 827725013}
+  - component: {fileID: 827725015}
   m_Layer: 0
   m_Name: DeadOpsDemoManager
   m_TagString: Untagged
@@ -3160,6 +3240,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &827725015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827725012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd686b57f884f1a9dd8d5d85809260a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelObjectiveManager
+  requiredKills: 3
+  nextSceneName: 
+  winSceneName: WinScene
+  deathSceneName: DeathScene
+  isFinalLevel: 1
+  objectiveText: {fileID: 68094934}
+  playerHealth: {fileID: 1457370888}
 --- !u!1001 &832874767
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6007,7 +6106,11 @@ MonoBehaviour:
   maxHealth: 100
   damagePerHit: 25
   healthRegenerationPerSecond: 5
+  healthMultiplier: 1
+  damageMultiplier: 1
+  speedMultiplier: 1
   invincibilityDuration: 1
+  deathSceneName: 
   currentHealth: 100
 --- !u!114 &1457370889
 MonoBehaviour:
@@ -8370,6 +8473,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1036833766}
+  - {fileID: 68094936}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
