@@ -37,11 +37,11 @@ public class CurrencyManager : MonoBehaviour
 
     // public void AwardExtraction(int killCount)
     // {
-    //     Add( killCount * 25 * 2);
+    //     Add( killCount * 5 * 2);
     // }
 
     // public void AwardDeath(int killCount)
     // {
-    //     Add(killCount * 25);
+    //     Add(killCount * 5);
     // }
 }

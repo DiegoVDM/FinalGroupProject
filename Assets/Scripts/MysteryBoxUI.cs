@@ -49,16 +49,11 @@ public class MysteryBoxUI : MonoBehaviour
         if (closeRevealButton != null)
         {
             closeRevealButton.onClick.RemoveAllListeners();
-            closeRevealButton.onClick.AddListener(() =>
-            {
-                revealPanel?.SetActive(false);
-                if (spinner != null)
-                    spinner.HideSpinPanel();
-            });
+            closeRevealButton.onClick.AddListener(HideRevealPanel);
         }
 
         RefreshBalance();
-        revealPanel?.SetActive(false);
+        HideRevealPanel();
 
         // keep balance label live if currency changes elsewhere
         if (CurrencyManager.Instance != null)
@@ -84,6 +79,9 @@ public class MysteryBoxUI : MonoBehaviour
 
         if (revealPanel == null && closeRevealButton != null)
             revealPanel = closeRevealButton.transform.parent?.gameObject;
+
+        if (revealPanel == null)
+            revealPanel = GameObject.Find("RevealPanel");
 
         if (revealIcon == null)
             revealIcon = FindComponentInScene<Image>("RevealIcon") ?? FindChildImageInPanel(revealPanel);
@@ -131,6 +129,16 @@ public class MysteryBoxUI : MonoBehaviour
             spinButtonLabel.text = $"Spin  —  ${spinCost}";
         if (spinButton != null)
             spinButton.interactable = CurrencyManager.Instance.Currency >= spinCost && !_spinning;
+    }
+
+    void HideRevealPanel()
+    {
+        if (revealPanel != null)
+            revealPanel.SetActive(false);
+        if (closeRevealButton != null)
+            closeRevealButton.gameObject.SetActive(false);
+        if (spinner != null)
+            spinner.HideSpinPanel();
     }
 
     // Spin 
