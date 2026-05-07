@@ -11014,6 +11014,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   moveSpeed: 6
+  moveJoystick: {fileID: 0}
+  aimJoystick: {fileID: 0}
+  useMobileInput: 1
+  joystickDeadZone: 0.1
   playerAnimator: {fileID: 2096628446}
   speedParameterName: Speed
   bulletSpeed: 30
@@ -11999,6 +12003,7 @@ MonoBehaviour:
   spawnInterval: 1.2
   maxZombies: 12
   spawnRadius: 14
+  moneyPerZombieKill: 25
 --- !u!4 &1229697363
 Transform:
   m_ObjectHideFlags: 0
