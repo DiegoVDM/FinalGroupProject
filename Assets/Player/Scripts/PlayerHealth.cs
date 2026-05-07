@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class PlayerHealth : MonoBehaviour
@@ -20,6 +21,10 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Invincibility")]
     [SerializeField] private float invincibilityDuration = 1f;
+
+    [Header("Death")]
+    [Tooltip("Exact name as in File > Build Settings (no .unity). Leave empty to stay in the current scene.")]
+    [SerializeField] private string deathSceneName = "";
 
     [SerializeField] private float currentHealth;
 
@@ -70,6 +75,8 @@ public class PlayerHealth : MonoBehaviour
 
                 if (CurrencyManager.Instance != null)
                     CurrencyManager.Instance.CashOutOnDeath();
+
+                LoadDeathSceneIfConfigured();
             }
 
             return;
@@ -84,6 +91,15 @@ public class PlayerHealth : MonoBehaviour
         SyncFromPerkState();
         currentHealth = Mathf.Clamp(currentHealth, 0f, MaxHealth);
         ActivePerkChanged?.Invoke(ActivePerk);
+    }
+
+    void LoadDeathSceneIfConfigured()
+    {
+        if (string.IsNullOrWhiteSpace(deathSceneName))
+            return;
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(deathSceneName);
     }
 
     void SyncFromPerkState()
