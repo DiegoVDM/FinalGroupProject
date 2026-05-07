@@ -35,7 +35,8 @@ public class FlyingZombie : MonoBehaviour
         if (destination != Vector3.zero)
         {
             //sets direction to face as the rotation to move towards the destination
-            Quaternion facing = Quaternion.LookRotation(destination);
+            Quaternion facing = Quaternion.LookRotation(destination) * 
+                Quaternion.Euler(0, 180f, 0);
             //adjusts rotation with Slerp
             transform.rotation = Quaternion.Slerp(transform.rotation, facing, 
                 rotateSpeed * Time.deltaTime);
