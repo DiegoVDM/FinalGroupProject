@@ -6,6 +6,12 @@ public class TwinStickPlayer : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 6f;
 
+    [Header("Mobile Input")]
+    [SerializeField] private MobileJoystick moveJoystick;
+    [SerializeField] private MobileJoystick aimJoystick;
+    [SerializeField] private bool useMobileInput = true;
+    [SerializeField] private float joystickDeadZone = 0.1f;
+
     [Header("Animation")]
     public Animator playerAnimator;
     public string speedParameterName = "Speed";
@@ -46,28 +52,14 @@ public class TwinStickPlayer : MonoBehaviour
 
     void MovePlayer()
     {
-        Vector3 moveDirection = Vector3.zero;
-
-        if (Input.GetKey(KeyCode.W))
-            moveDirection += Vector3.forward;
-
-        if (Input.GetKey(KeyCode.S))
-            moveDirection += Vector3.back;
-
-        if (Input.GetKey(KeyCode.A))
-            moveDirection += Vector3.left;
-
-        if (Input.GetKey(KeyCode.D))
-            moveDirection += Vector3.right;
-
-        moveDirection.Normalize();
+        Vector3 moveDirection = GetMoveDirection();
 
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
 
         UpdateMovementAnimation(moveDirection);
 
         // If not shooting, face movement direction.
-        if (moveDirection.sqrMagnitude > 0.01f && !IsShootingInputHeld())
+        if (moveDirection.sqrMagnitude > 0.01f && !IsAimInputHeld())
         {
             transform.rotation = Quaternion.LookRotation(moveDirection);
         }
@@ -84,19 +76,7 @@ public class TwinStickPlayer : MonoBehaviour
 
     void AimAndShoot()
     {
-        Vector3 aimDirection = Vector3.zero;
-
-        if (Input.GetKey(KeyCode.UpArrow))
-            aimDirection += Vector3.forward;
-
-        if (Input.GetKey(KeyCode.DownArrow))
-            aimDirection += Vector3.back;
-
-        if (Input.GetKey(KeyCode.LeftArrow))
-            aimDirection += Vector3.left;
-
-        if (Input.GetKey(KeyCode.RightArrow))
-            aimDirection += Vector3.right;
+        Vector3 aimDirection = GetAimDirection();
 
         if (aimDirection.sqrMagnitude > 0.01f)
         {
@@ -113,12 +93,81 @@ public class TwinStickPlayer : MonoBehaviour
         }
     }
 
-    bool IsShootingInputHeld()
+    Vector3 GetMoveDirection()
     {
-        return Input.GetKey(KeyCode.UpArrow)
-            || Input.GetKey(KeyCode.DownArrow)
-            || Input.GetKey(KeyCode.LeftArrow)
-            || Input.GetKey(KeyCode.RightArrow);
+        if (useMobileInput && moveJoystick != null && moveJoystick.Direction.magnitude > joystickDeadZone)
+        {
+            return ConvertJoystickVectorToWorldDirection(moveJoystick.Direction);
+        }
+
+        return GetKeyboardMoveDirection();
+    }
+
+    Vector3 GetAimDirection()
+    {
+        if (useMobileInput && aimJoystick != null && aimJoystick.Direction.magnitude > joystickDeadZone)
+        {
+            return ConvertJoystickVectorToWorldDirection(aimJoystick.Direction);
+        }
+
+        return GetKeyboardAimDirection();
+    }
+
+    Vector3 GetKeyboardMoveDirection()
+    {
+        Vector3 moveDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.W))
+            moveDirection += Vector3.forward;
+
+        if (Input.GetKey(KeyCode.S))
+            moveDirection += Vector3.back;
+
+        if (Input.GetKey(KeyCode.A))
+            moveDirection += Vector3.left;
+
+        if (Input.GetKey(KeyCode.D))
+            moveDirection += Vector3.right;
+
+        moveDirection.Normalize();
+        return moveDirection;
+    }
+
+    Vector3 GetKeyboardAimDirection()
+    {
+        Vector3 aimDirection = Vector3.zero;
+
+        if (Input.GetKey(KeyCode.UpArrow))
+            aimDirection += Vector3.forward;
+
+        if (Input.GetKey(KeyCode.DownArrow))
+            aimDirection += Vector3.back;
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+            aimDirection += Vector3.left;
+
+        if (Input.GetKey(KeyCode.RightArrow))
+            aimDirection += Vector3.right;
+
+        aimDirection.Normalize();
+        return aimDirection;
+    }
+
+    Vector3 ConvertJoystickVectorToWorldDirection(Vector2 input)
+    {
+        Vector3 direction = new Vector3(input.x, 0f, input.y);
+
+        if (direction.sqrMagnitude > 1f)
+        {
+            direction.Normalize();
+        }
+
+        return direction;
+    }
+
+    bool IsAimInputHeld()
+    {
+        return GetAimDirection().sqrMagnitude > 0.01f;
     }
 
     void FireBullet(Vector3 direction)
