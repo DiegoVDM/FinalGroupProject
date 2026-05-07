@@ -508,6 +508,7 @@ MonoBehaviour:
   moneyEarnedFormat: 'Earned this run: ${0}'
   totalWalletFormat: 'Total cash: ${0}'
   preferDemoKillCountWhenHigher: 1
+  estimateMoneyFromKillsWhenEarnedIsZero: 1
 --- !u!4 &707596465
 Transform:
   m_ObjectHideFlags: 0
@@ -961,7 +962,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -20210393, guid: e72f1c34ad1572940bf0baecab3ce258, type: 3}
+  m_Sprite: {fileID: 1586909112, guid: 76b347dcbcd7d4849a18410bb91aaa4a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
