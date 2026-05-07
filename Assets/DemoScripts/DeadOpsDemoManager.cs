@@ -52,7 +52,10 @@ public class DeadOpsDemoManager : MonoBehaviour
             randomCircle = Vector2.up;
 
         Vector3 spawnPosition = player.position + new Vector3(randomCircle.x, 0f, randomCircle.y) * spawnRadius;
-        spawnPosition.y = 1f;
+
+        // Use the assigned Player root height instead of forcing every map to Y = 1.
+        // This lets zombies spawn correctly on maps where the floor is not at world Y = 0.
+        spawnPosition.y = player.position.y;
 
         GameObject zombie = GameObject.CreatePrimitive(PrimitiveType.Capsule);
         zombie.name = "Prototype Zombie";
