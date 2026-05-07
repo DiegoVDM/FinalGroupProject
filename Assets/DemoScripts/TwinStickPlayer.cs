@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class TwinStickPlayer : MonoBehaviour
@@ -5,16 +6,36 @@ public class TwinStickPlayer : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 6f;
 
+    [Header("Animation")]
+    public Animator playerAnimator;
+    public string speedParameterName = "Speed";
+
     [Header("Shooting")]
     public float bulletSpeed = 16f;
     public float fireRate = 0.12f;
+    public Transform bulletSpawnPoint;
+    public BulletProjectile bulletPrefab;
+
+    [Header("Weapon Audio")]
+    public AudioClip gunfireSound;
+    public AudioSource weaponAudioSource;
+    [Range(0f, 1f)]
+    public float gunfireVolume = 0.7f;
+
+    [Header("Weapon VFX")]
+    public GameObject muzzleFlashObject;
+    public float muzzleFlashDuration = 0.05f;
 
     private float nextFireTime;
     private Vector3 lastAimDirection = Vector3.forward;
+    private Coroutine muzzleFlashCoroutine;
 
     void Start()
     {
         SetupPlayerVisual();
+        SetupAnimatorReference();
+        SetupWeaponAudio();
+        SetupMuzzleFlash();
     }
 
     void Update()
@@ -43,11 +64,22 @@ public class TwinStickPlayer : MonoBehaviour
 
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
 
-        // If not shooting, face movement direction
+        UpdateMovementAnimation(moveDirection);
+
+        // If not shooting, face movement direction.
         if (moveDirection.sqrMagnitude > 0.01f && !IsShootingInputHeld())
         {
             transform.rotation = Quaternion.LookRotation(moveDirection);
         }
+    }
+
+    void UpdateMovementAnimation(Vector3 moveDirection)
+    {
+        if (playerAnimator == null)
+            return;
+
+        float movementAmount = moveDirection.sqrMagnitude > 0.01f ? 1f : 0f;
+        playerAnimator.SetFloat(speedParameterName, movementAmount);
     }
 
     void AimAndShoot()
@@ -91,10 +123,41 @@ public class TwinStickPlayer : MonoBehaviour
 
     void FireBullet(Vector3 direction)
     {
+        BulletProjectile projectile = SpawnBulletProjectile(direction);
+
+        if (projectile != null)
+        {
+            projectile.Initialize(direction, bulletSpeed);
+        }
+
+        PlayGunfireSound();
+        TriggerMuzzleFlash();
+    }
+
+    BulletProjectile SpawnBulletProjectile(Vector3 direction)
+    {
+        Vector3 spawnPosition = transform.position + direction * 0.9f + Vector3.up * 0.2f;
+        Quaternion spawnRotation = Quaternion.LookRotation(direction);
+
+        if (bulletSpawnPoint != null)
+        {
+            spawnPosition = bulletSpawnPoint.position;
+            spawnRotation = bulletSpawnPoint.rotation;
+        }
+
+        if (bulletPrefab != null)
+        {
+            return Instantiate(bulletPrefab, spawnPosition, spawnRotation);
+        }
+
+        return SpawnFallbackPrototypeBullet(spawnPosition);
+    }
+
+    BulletProjectile SpawnFallbackPrototypeBullet(Vector3 spawnPosition)
+    {
         GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         bullet.name = "Prototype Bullet";
-
-        bullet.transform.position = transform.position + direction * 0.9f + Vector3.up * 0.2f;
+        bullet.transform.position = spawnPosition;
         bullet.transform.localScale = Vector3.one * 0.3f;
 
         Renderer bulletRenderer = bullet.GetComponent<Renderer>();
@@ -108,11 +171,79 @@ public class TwinStickPlayer : MonoBehaviour
 
         Rigidbody rb = bullet.AddComponent<Rigidbody>();
         rb.useGravity = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.linearVelocity = direction * bulletSpeed;
+        rb.isKinematic = true;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
         BulletProjectile projectile = bullet.AddComponent<BulletProjectile>();
         projectile.lifeTime = 2f;
+        return projectile;
+    }
+
+    void PlayGunfireSound()
+    {
+        if (weaponAudioSource == null || gunfireSound == null)
+            return;
+
+        weaponAudioSource.PlayOneShot(gunfireSound, gunfireVolume);
+    }
+
+    void TriggerMuzzleFlash()
+    {
+        if (muzzleFlashObject == null)
+            return;
+
+        muzzleFlashObject.SetActive(true);
+
+        if (muzzleFlashCoroutine != null)
+        {
+            StopCoroutine(muzzleFlashCoroutine);
+        }
+
+        muzzleFlashCoroutine = StartCoroutine(HideMuzzleFlashAfterDelay());
+    }
+
+    IEnumerator HideMuzzleFlashAfterDelay()
+    {
+        yield return new WaitForSeconds(muzzleFlashDuration);
+
+        if (muzzleFlashObject != null)
+        {
+            muzzleFlashObject.SetActive(false);
+        }
+
+        muzzleFlashCoroutine = null;
+    }
+
+    void SetupAnimatorReference()
+    {
+        if (playerAnimator == null)
+        {
+            playerAnimator = GetComponentInChildren<Animator>();
+        }
+    }
+
+    void SetupWeaponAudio()
+    {
+        if (weaponAudioSource == null)
+        {
+            weaponAudioSource = GetComponent<AudioSource>();
+        }
+
+        if (weaponAudioSource == null)
+        {
+            weaponAudioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        weaponAudioSource.playOnAwake = false;
+        weaponAudioSource.spatialBlend = 0f;
+    }
+
+    void SetupMuzzleFlash()
+    {
+        if (muzzleFlashObject != null)
+        {
+            muzzleFlashObject.SetActive(false);
+        }
     }
 
     void SetupPlayerVisual()
@@ -123,46 +254,7 @@ public class TwinStickPlayer : MonoBehaviour
             playerRenderer.material.color = Color.cyan;
         }
 
-        // Simple gun/barrel so we can see which direction the player is facing
-        GameObject gun = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        gun.name = "Prototype Gun";
-        gun.transform.SetParent(transform);
-
-        gun.transform.localPosition = new Vector3(0f, 0.15f, 0.75f);
-        gun.transform.localRotation = Quaternion.identity;
-        gun.transform.localScale = new Vector3(0.35f, 0.2f, 0.8f);
-
-        Renderer gunRenderer = gun.GetComponent<Renderer>();
-        if (gunRenderer != null)
-        {
-            gunRenderer.material.color = Color.black;
-        }
-
-        Collider gunCollider = gun.GetComponent<Collider>();
-        if (gunCollider != null)
-        {
-            Destroy(gunCollider);
-        }
-    }
-}
-
-public class BulletProjectile : MonoBehaviour
-{
-    public float lifeTime = 2f;
-
-    void Start()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        DemoZombie zombie = other.GetComponent<DemoZombie>();
-
-        if (zombie != null)
-        {
-            zombie.Die();
-            Destroy(gameObject);
-        }
+        // The old prototype cube gun was removed.
+        // The real gun model now lives under AimPivot > WeaponSocket.
     }
 }

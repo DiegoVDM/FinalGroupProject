@@ -9,11 +9,11 @@ Member names:
 
 
 Member roles:
-1. Diego Vasquez-Del-Mercado: Enemies
+1. Diego Vasquez-Del-Mercado: Gambling Mechanic, player, items
 2. Grant Becker: Enemies
 3. Chris Nguyen: Weapons/Player
 4. David Aguilar: Map
-5. Gilbert Venegas: Player
+5. Gilbert Venegas: Player / Weapon Box 
 
 
 Game Description: 

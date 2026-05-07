@@ -1,5 +1,5 @@
 using UnityEngine;
-
+//DeadOpsDemoManager Script
 public class DeadOpsDemoManager : MonoBehaviour
 {
     [Header("References")]
@@ -92,6 +92,12 @@ public class DemoZombie : MonoBehaviour
 
         if (direction.magnitude <= hitDistance)
         {
+            PlayerHealth playerHealth = target.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(playerHealth.DamagePerHit);
+            }
+
             DeadOpsDemoManager.playerHits++;
             Destroy(gameObject);
             return;
