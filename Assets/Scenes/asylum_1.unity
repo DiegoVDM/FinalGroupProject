@@ -1536,7 +1536,7 @@ MonoBehaviour:
   damageMultiplier: 1
   speedMultiplier: 1
   invincibilityDuration: 1
-  deathSceneName: 
+  deathSceneName: DeathScene
   currentHealth: 100
 --- !u!114 &331303461
 MonoBehaviour:

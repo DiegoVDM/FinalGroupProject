@@ -1764,7 +1764,6 @@ GameObject:
   - component: {fileID: 711382656}
   - component: {fileID: 711382655}
   - component: {fileID: 711382654}
-  - component: {fileID: 711382653}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1772,24 +1771,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &711382653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711382652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d427cb41dc2dc22499282c481a437c51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  baseMaxHealth: 100
-  baseMoveSpeed: 6
-  baseDamage: 1
-  healthMultiplier: 1
-  speedMultiplier: 1
-  damageMultiplier: 1
 --- !u!114 &711382654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1818,6 +1799,9 @@ MonoBehaviour:
   onCurrencyChanged:
     m_PersistentCalls:
       m_Calls: []
+  moneyPerKill: 25
+  pendingKills: 0
+  pendingEarnings: 0
 --- !u!4 &711382656
 Transform:
   m_ObjectHideFlags: 0

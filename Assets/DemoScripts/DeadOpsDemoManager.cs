@@ -26,6 +26,12 @@ public class DeadOpsDemoManager : MonoBehaviour
 
     public static int Money => money;
 
+    /// <summary> Reward per kill used by the demo; safe after demo manager is destroyed (defaults to 25). </summary>
+    public static int GetMoneyPerZombieKill()
+    {
+        return instance != null ? instance.moneyPerZombieKill : 25;
+    }
+
     void Awake()
     {
         instance = this;

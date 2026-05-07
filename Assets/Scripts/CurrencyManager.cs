@@ -21,6 +21,11 @@ public class CurrencyManager : MonoBehaviour
     public int Currency => _currency;
     public int PendingKills => pendingKills;
     public int PendingEarnings => pendingEarnings;
+    public int MoneyPerKill => moneyPerKill;
+
+    /// <summary> Kills and money from the most recent extract/death cash-out (shown on death/summary UI). </summary>
+    public int LastRunKills { get; private set; }
+    public int LastRunMoneyEarned { get; private set; }
 
     void Awake()
     {
@@ -68,6 +73,9 @@ public class CurrencyManager : MonoBehaviour
 
     void CashOutPending()
     {
+        LastRunKills = pendingKills;
+        LastRunMoneyEarned = pendingEarnings;
+
         if (pendingEarnings > 0)
             Add(pendingEarnings);
 
