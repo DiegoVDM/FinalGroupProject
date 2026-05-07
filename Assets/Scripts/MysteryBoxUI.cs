@@ -14,6 +14,10 @@ public class MysteryBoxUI : MonoBehaviour
     public TextMeshProUGUI balanceLabel;
     public TextMeshProUGUI spinButtonLabel;
 
+    [Header("Active Perk Display")]
+    public TextMeshProUGUI activePerkLabel;
+    public Image activePerkIcon;
+
     [Header("Reveal Panel")]
     public GameObject revealPanel;       
     public Image revealIcon;        // Perk Icon
@@ -58,6 +62,11 @@ public class MysteryBoxUI : MonoBehaviour
         // keep balance label live if currency changes elsewhere
         if (CurrencyManager.Instance != null)
             CurrencyManager.Instance.onCurrencyChanged.AddListener(_ => RefreshBalance());
+
+        // initialize + keep active perk label live
+        RefreshActivePerkDisplay();
+        if (PlayerStats.Instance != null)
+            PlayerStats.Instance.ActivePerkChanged += _ => RefreshActivePerkDisplay();
     }
 
     void ResolveMissingReferences()
@@ -88,6 +97,12 @@ public class MysteryBoxUI : MonoBehaviour
 
         if (revealTitle == null)
             revealTitle = FindComponentInScene<TextMeshProUGUI>("RevealTitle") ?? FindChildTextInPanel(revealPanel);
+
+        if (activePerkLabel == null)
+            activePerkLabel = FindComponentInScene<TextMeshProUGUI>("ActivePerkText");
+
+        if (activePerkIcon == null)
+            activePerkIcon = FindComponentInScene<Image>("ActivePerkIcon");
     }
 
     T FindComponentInScene<T>(string objectName) where T : Component
@@ -129,6 +144,48 @@ public class MysteryBoxUI : MonoBehaviour
             spinButtonLabel.text = $"Spin  —  ${spinCost}";
         if (spinButton != null)
             spinButton.interactable = CurrencyManager.Instance.Currency >= spinCost && !_spinning;
+    }
+
+    void RefreshActivePerkDisplay()
+    {
+        if (activePerkLabel == null && activePerkIcon == null)
+            return;
+
+        if (PlayerStats.Instance == null || PlayerStats.Instance.ActivePerk == null)
+        {
+            if (activePerkLabel != null)
+                activePerkLabel.text = "Active Perk: None";
+            if (activePerkIcon != null)
+                activePerkIcon.enabled = false;
+            return;
+        }
+
+        PerkType perk = PlayerStats.Instance.ActivePerk.Value;
+        if (activePerkLabel != null)
+            activePerkLabel.text = $"Active Perk: {PerkToDisplayName(perk)}";
+
+        if (activePerkIcon != null)
+        {
+            activePerkIcon.enabled = true;
+            activePerkIcon.sprite = perk switch
+            {
+                PerkType.DoubleHealth => healthSprite,
+                PerkType.Speed => speedSprite,
+                PerkType.StrongerDamage => damageSprite,
+                _ => activePerkIcon.sprite
+            };
+        }
+    }
+
+    static string PerkToDisplayName(PerkType perk)
+    {
+        return perk switch
+        {
+            PerkType.DoubleHealth => "Double Health",
+            PerkType.Speed => "Speed Boost",
+            PerkType.StrongerDamage => "Double Tap",
+            _ => perk.ToString()
+        };
     }
 
     void HideRevealPanel()
@@ -206,6 +263,8 @@ public class MysteryBoxUI : MonoBehaviour
         // Applies the perk
         if (PlayerStats.Instance != null)
             PlayerStats.Instance.ApplyPerk(perk);
+
+        RefreshActivePerkDisplay();
 
         _spinning = false;
         RefreshBalance();
