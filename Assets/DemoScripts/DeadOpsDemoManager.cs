@@ -143,7 +143,7 @@ public class DeadOpsDemoManager : MonoBehaviour
     void OnGUI()
     {
         GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 18;
+        style.fontSize = 26;
         style.alignment = TextAnchor.UpperLeft;
         style.normal.textColor = Color.white;
 
