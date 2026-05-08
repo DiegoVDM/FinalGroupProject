@@ -834,18 +834,18 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 28
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 1
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Zombies left: 3'
+  m_Text: 'Zombies left: 75'
 --- !u!222 &68094935
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -868,11 +868,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1686687724}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 24, y: -24}
-  m_SizeDelta: {x: 360, y: 52}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -45}
+  m_SizeDelta: {x: 600, y: 60}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!4 &70591957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7063113618969942108, guid: 183ac09e37cd1334d861e9854abb6265, type: 3}
@@ -12504,7 +12504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd686b57f884f1a9dd8d5d85809260a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelObjectiveManager
-  requiredKills: 3
+  requiredKills: 75
   nextSceneName: lava_zone_2
   winSceneName: WinScene
   deathSceneName: DeathScene

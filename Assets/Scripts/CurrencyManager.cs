@@ -13,7 +13,8 @@ public class CurrencyManager : MonoBehaviour
     [SerializeField] private int pendingKills = 0;
     [SerializeField] private int pendingEarnings = 0;
 
-    const string KeyCurrency = "CurrencyManager.Currency";
+    const int FallbackStartingCurrency = 500;
+    public const string KeyCurrency = "CurrencyManager.Currency";
     const string KeyPendingKills = "CurrencyManager.PendingKills";
     const string KeyPendingEarnings = "CurrencyManager.PendingEarnings";
 
@@ -56,9 +57,39 @@ public class CurrencyManager : MonoBehaviour
     public void RegisterKill(int kills = 1)
     {
         if (kills <= 0) return;
+        int earnings = kills * moneyPerKill;
         pendingKills += kills;
-        pendingEarnings += kills * moneyPerKill;
+        pendingEarnings += earnings;
+        Add(earnings);
         SavePendingOnly();
+    }
+
+    public static int RegisterKillReward(int kills, int moneyPerKill, int defaultCurrency = FallbackStartingCurrency)
+    {
+        if (kills <= 0) return GetSavedCurrency(defaultCurrency);
+
+        if (Instance != null)
+        {
+            Instance.RegisterKill(kills);
+            return Instance.Currency;
+        }
+
+        int earnings = kills * Mathf.Max(1, moneyPerKill);
+        int currency = GetSavedCurrency(defaultCurrency) + earnings;
+        int pendingKillCount = PlayerPrefs.GetInt(KeyPendingKills, 0) + kills;
+        int pendingEarned = PlayerPrefs.GetInt(KeyPendingEarnings, 0) + earnings;
+
+        PlayerPrefs.SetInt(KeyCurrency, currency);
+        PlayerPrefs.SetInt(KeyPendingKills, pendingKillCount);
+        PlayerPrefs.SetInt(KeyPendingEarnings, pendingEarned);
+        PlayerPrefs.Save();
+
+        return currency;
+    }
+
+    public static int GetSavedCurrency(int defaultValue = FallbackStartingCurrency)
+    {
+        return PlayerPrefs.GetInt(KeyCurrency, defaultValue);
     }
 
     public void CashOutOnExtract()
@@ -73,11 +104,11 @@ public class CurrencyManager : MonoBehaviour
 
     void CashOutPending()
     {
+        if (pendingKills <= 0 && pendingEarnings <= 0)
+            return;
+
         LastRunKills = pendingKills;
         LastRunMoneyEarned = pendingEarnings;
-
-        if (pendingEarnings > 0)
-            Add(pendingEarnings);
 
         pendingKills = 0;
         pendingEarnings = 0;
