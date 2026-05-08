@@ -221,6 +221,10 @@ public class DemoZombie : MonoBehaviour
     public float moveSpeed = 3.2f;
     public float hitDistance = 1.2f;
 
+    //used for zombie sound effects
+    public AudioClip deathSound;
+    public AudioSource audioSource;
+
     void Update()
     {
         if (target == null)
@@ -257,6 +261,7 @@ public class DemoZombie : MonoBehaviour
     public void Die()
     {
         DeadOpsDemoManager.RegisterZombieKill();
+        audioSource.PlayOneShot(deathSound);
         Destroy(gameObject);
     }
 }
