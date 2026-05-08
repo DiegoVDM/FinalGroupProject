@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 // DeadOpsDemoManager Script
 public class DeadOpsDemoManager : MonoBehaviour
@@ -10,6 +11,7 @@ public class DeadOpsDemoManager : MonoBehaviour
     public float spawnInterval = 1.2f;
     public int maxZombies = 12;
     public float spawnRadius = 14f;
+    [SerializeField] private GameObject zombieVisualPrefab;
 
     [Header("Money")]
     [SerializeField] private int moneyPerZombieKill = 25;
@@ -63,19 +65,76 @@ public class DeadOpsDemoManager : MonoBehaviour
         // This lets zombies spawn correctly on maps where the floor is not at world Y = 0.
         spawnPosition.y = player.position.y;
 
-        GameObject zombie = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-        zombie.name = "Prototype Zombie";
+        GameObject zombie = new GameObject("Zombie");
         zombie.transform.position = spawnPosition;
 
-        Renderer zombieRenderer = zombie.GetComponent<Renderer>();
-        if (zombieRenderer != null)
-        {
-            zombieRenderer.material.color = Color.red;
-        }
+        CapsuleCollider zombieCollider = zombie.AddComponent<CapsuleCollider>();
+        zombieCollider.height = 2f;
+        zombieCollider.radius = 0.5f;
+        zombieCollider.center = Vector3.up;
+        zombieCollider.isTrigger = false;
+
+        Rigidbody zombieRigidbody = zombie.AddComponent<Rigidbody>();
+        zombieRigidbody.useGravity = false;
+        zombieRigidbody.isKinematic = true;
+        zombieRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+
+        if (zombieVisualPrefab != null)
+            CreateZombieVisual(zombie.transform);
+        else
+            CreateFallbackZombieVisual(zombie.transform);
 
         DemoZombie zombieAI = zombie.AddComponent<DemoZombie>();
         zombieAI.target = player;
         zombieAI.moveSpeed = Random.Range(2.5f, 4.2f);
+    }
+
+    void CreateZombieVisual(Transform root)
+    {
+        GameObject visual = Instantiate(zombieVisualPrefab, root);
+        visual.name = zombieVisualPrefab.name;
+        visual.transform.localPosition = Vector3.zero;
+        visual.transform.localRotation = Quaternion.identity;
+
+        DisableVisualBehaviorComponents(visual);
+    }
+
+    void CreateFallbackZombieVisual(Transform root)
+    {
+        GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+        visual.name = "Prototype Zombie Visual";
+        visual.transform.SetParent(root, false);
+        visual.transform.localPosition = Vector3.up;
+        visual.transform.localRotation = Quaternion.identity;
+
+        Collider visualCollider = visual.GetComponent<Collider>();
+        if (visualCollider != null)
+            Destroy(visualCollider);
+
+        Renderer zombieRenderer = visual.GetComponent<Renderer>();
+        if (zombieRenderer != null)
+            zombieRenderer.material.color = Color.red;
+    }
+
+    void DisableVisualBehaviorComponents(GameObject visual)
+    {
+        foreach (BasicZombie zombieBehavior in visual.GetComponentsInChildren<BasicZombie>(true))
+            zombieBehavior.enabled = false;
+
+        foreach (ChargerZombie zombieBehavior in visual.GetComponentsInChildren<ChargerZombie>(true))
+            zombieBehavior.enabled = false;
+
+        foreach (FlyingZombie zombieBehavior in visual.GetComponentsInChildren<FlyingZombie>(true))
+            zombieBehavior.enabled = false;
+
+        foreach (GrabberZombie zombieBehavior in visual.GetComponentsInChildren<GrabberZombie>(true))
+            zombieBehavior.enabled = false;
+
+        foreach (PowerUpZombie zombieBehavior in visual.GetComponentsInChildren<PowerUpZombie>(true))
+            zombieBehavior.enabled = false;
+
+        foreach (NavMeshAgent agent in visual.GetComponentsInChildren<NavMeshAgent>(true))
+            agent.enabled = false;
     }
 
     int CountZombies()

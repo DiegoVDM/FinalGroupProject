@@ -486,6 +486,8 @@ MonoBehaviour:
   spawnInterval: 1.2
   maxZombies: 12
   spawnRadius: 14
+  zombieVisualPrefab: {fileID: 3119886707113513579, guid: 9e071af8accc8fa49b043774ec23f060, type: 3}
+  moneyPerZombieKill: 25
 --- !u!4 &573751211
 Transform:
   m_ObjectHideFlags: 0
@@ -1084,7 +1086,11 @@ MonoBehaviour:
   maxHealth: 100
   damagePerHit: 25
   healthRegenerationPerSecond: 5
+  healthMultiplier: 1
+  damageMultiplier: 1
+  speedMultiplier: 1
   invincibilityDuration: 1
+  deathSceneName: 
   currentHealth: 100
 --- !u!1001 &1052950534
 PrefabInstance:

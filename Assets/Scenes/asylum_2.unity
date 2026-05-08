@@ -6062,6 +6062,7 @@ MonoBehaviour:
   spawnInterval: 1.2
   maxZombies: 12
   spawnRadius: 14
+  zombieVisualPrefab: {fileID: 3119886707113513579, guid: 9e071af8accc8fa49b043774ec23f060, type: 3}
   moneyPerZombieKill: 25
 --- !u!4 &2121769163
 Transform:
