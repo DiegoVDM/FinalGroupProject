@@ -1116,7 +1116,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Zombies left: 3'
+  m_Text: 'Zombies left: 35'
 --- !u!222 &432153620
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6091,7 +6091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd686b57f884f1a9dd8d5d85809260a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelObjectiveManager
-  requiredKills: 3
+  requiredKills: 35
   nextSceneName: asylum_3
   winSceneName: WinScene
   deathSceneName: DeathScene
