@@ -145,9 +145,7 @@ public class DeadOpsDemoManager : MonoBehaviour
     public static void RegisterZombieKill()
     {
         kills++;
-
-        if (CurrencyManager.Instance != null)
-            CurrencyManager.Instance.RegisterKill(1);
+        money = CurrencyManager.RegisterKillReward(1, GetMoneyPerZombieKill(), money);
     }
 
     public static void AddMoney(int amount)
@@ -155,7 +153,7 @@ public class DeadOpsDemoManager : MonoBehaviour
         if (amount <= 0)
             return;
 
-        money += amount;
+        money = CurrencyManager.GetSavedCurrency() + amount;
         SaveMoney();
     }
 
@@ -180,12 +178,12 @@ public class DeadOpsDemoManager : MonoBehaviour
 
     static void LoadMoney()
     {
-        money = PlayerPrefs.GetInt(MoneySaveKey, 0);
+        money = CurrencyManager.GetSavedCurrency(PlayerPrefs.GetInt(MoneySaveKey, 500));
     }
 
     static void SaveMoney()
     {
-        PlayerPrefs.SetInt(MoneySaveKey, money);
+        PlayerPrefs.SetInt(CurrencyManager.KeyCurrency, money);
         PlayerPrefs.Save();
     }
 

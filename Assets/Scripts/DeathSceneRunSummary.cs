@@ -39,6 +39,7 @@ public class DeathSceneRunSummary : MonoBehaviour
 
         if (CurrencyManager.Instance != null)
         {
+            CurrencyManager.Instance.CashOutOnDeath();
             killsFromWallet = CurrencyManager.Instance.LastRunKills;
             earned = CurrencyManager.Instance.LastRunMoneyEarned;
             wallet = CurrencyManager.Instance.Currency;
